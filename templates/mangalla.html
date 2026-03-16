@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="preview">
 <div id="card">
     <div class="mantra">
             <div class="mantra">
@@ -22,6 +23,10 @@
          <div class="shop-name">
              ஸ்ரீ மங்கள கணபதி ஜுவல்லரி
          
+             <div class="contact">
+             <div class="phone">
+                 அகரம் கூட்ரோடு 
+             </div>
         </div>
 <div class="slogan">
     தங்கம் மற்றும் வெள்ளி நகைகள் வாங்க கைராசியான இடம்  
@@ -30,12 +35,16 @@
     <p id="datetime"></p>
       <table>
             <tr>
-                <td>24K தங்கம்(gold) விலை</td>
-                <td class="rate" id="gold24">₹ 5,950</td>
+                <td>22K தங்கம்(gold) விலை</td>
+                
+                <td class="rate" id="gold-rate">loading...</td>
+
             </tr>
+            
             <tr>
                 <td>வெள்ளி(silver) விலை</td>
-                <td class="rate"  id="silver">₹ 75</td>
+    <td class="rate" id="silver-rate">loading...</td>
+</td>
             </tr>
         </table>
 
@@ -47,83 +56,22 @@
         வெள்ளி விலை : --
     </div> -->
 
-    <p style="margin-top:15px; font-size:12px; color:white;">
+    <p style="margin-top:15px; font-size:15px; color:white;">
         * விலைகள் மாற்றத்திற்குட்பட்டவை
     </p>
-    <p style="margin-top:15px; font-size:12px; color:white;">
+    <p style="margin-top:15px; font-size:18px; color:white;">
         பிரதி <mark>செவ்வாய்</mark> விடுமுறை   
     </p>
-    <div class="contact">
-    <div class="phone">
-        📞 +91 9790482723
-    </div>
 </div>
 </div>
- <button onclick="generateImage()">Generate Image</button>
+</div>
+<div class="button-bar">
+    <button id="fetch-rate">Fetch Rate</button>
+    <button onclick="generateImage()">Generate Image</button>
+</div>
 
 
-<script>
-function updateDateTime() {
-    const now = new Date();
-
-    const formatted = now.toLocaleString("ta-IN", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-    });
-
-    document.getElementById("datetime").innerText =
-        "இன்று: " + formatted;
-}
-async function generateImage() {
-
-    await fetchRates();
-    updateDateTime();
-
-    await document.fonts.ready;
-
-    const canvas = await html2canvas(document.querySelector("#card"), {
-        scale: window.devicePixelRatio * 2,
-        useCORS: true,
-        backgroundColor: null
-    });
-
-    const image = canvas.toDataURL("image/png");
-
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = "gold-rate.png";
-    link.click();
-}
-async function fetchRates() {
-    const response = await fetch("/rates/");
-    const data = await response.json();
-
-    if (data.status !== "success") {
-        alert("Error fetching rates");
-        return;
-    }
-
-    const goldOunce = data.metals.gold;
-    const silverOunce = data.metals.silver;
-    const goldPerGram = goldOunce / 31.1035;
-    const silverPerGram = silverOunce / 31.1035;
-
-
-    document.getElementById("gold24").innerText =
-        goldPerGram.toFixed(2) + " ₹";
-
-    document.getElementById("silver").innerText =
-        silverPerGram.toFixed(2) + " ₹";
-}
-
-
-   
-</script>
+<script src="{% static "js/mangala.js" %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>

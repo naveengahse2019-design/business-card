@@ -1,8 +1,12 @@
 import requests
 from django.conf import settings
-from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.cache import cache
+from bs4 import BeautifulSoup
+from django.http import JsonResponse
+import cloudscraper
+
+
 
 
 
@@ -10,20 +14,49 @@ from django.core.cache import cache
 def home(request):
     return render(request,"mangalla.html")
 
-def metal_rates(request):
-    url = "https://api.metals.dev/v1/latest"
+import cloudscraper
+from bs4 import BeautifulSoup
+from django.http import JsonResponse
 
-    params = {
-        "api_key": settings.METALS_API_KEY,
-        "currency": "INR",
-        "unit": "toz"
-    }
 
-    try:
-        response = requests.get(url, params=params)
-        data = response.json()
+def rates(request):
 
-        return JsonResponse(data)
+    scraper = cloudscraper.create_scraper()
 
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    # SILVER
+    silver_url = "https://www.goodreturns.in/silver-rates/salem.html"
+    res = scraper.get(silver_url)
+
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    silver_tag = soup.find("span", id="silver-1g-price")
+
+    if silver_tag:
+        silver = silver_tag.text.strip().replace("₹", "").replace(",", "")
+    else:
+        silver = "0"
+
+
+    # GOLD
+    gold_url = "https://www.goodreturns.in/gold-rates/salem.html"
+    res2 = scraper.get(gold_url)
+
+    soup2 = BeautifulSoup(res2.text, "html.parser")
+
+    gold_tag = soup2.find("span", id="22K-price")
+
+    if gold_tag:
+        gold = gold_tag.text.strip().replace("₹", "").replace(",", "")
+    else:
+        gold = "0"
+
+
+    return JsonResponse({
+        "gold": gold,
+        "silver": silver
+    })
+
+
+
+
+#############################################
