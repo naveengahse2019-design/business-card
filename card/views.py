@@ -13,6 +13,7 @@ import cloudscraper
 
 def home(request):
     return render(request,"mangalla.html")
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -26,7 +27,6 @@ def update_rates(request):
 
     if request.method == "POST":
         data = json.loads(request.body)
-
         gold_rate = data.get("gold", "0")
         silver_rate = data.get("silver", "0")
 
@@ -38,6 +38,7 @@ def rates(request):
         "gold": gold_rate,
         "silver": silver_rate
     })
+
 # import cloudscraper
 # from bs4 import BeautifulSoup
 # from django.http import JsonResponse
@@ -83,4 +84,4 @@ def rates(request):
 
 
 
-#############################################
+# #############################################
