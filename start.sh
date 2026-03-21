@@ -1,1 +1,1 @@
-gunicorn manga.wsgi:application
+gunicorn card.wsgi:application
